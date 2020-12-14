@@ -39,5 +39,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/styled-components": "^5.1.5",
+    "@types/uuid": "^8.3.0",
+    "styled-components": "^5.2.1",
+    "uuid": "^8.3.2"
   }
 }
