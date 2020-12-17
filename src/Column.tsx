@@ -45,7 +45,13 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
         >
             <ColumnTitle>{text}</ColumnTitle>
             { state.lists[index].tasks.map((task, i) => {
-                return <Card text={task.text} key={task.id} index={i} />
+                return <Card
+                    key={task.id}
+                    id={task.id}
+                    columnId={id}
+                    text={task.text}
+                    index={i}
+                />
             })}
             <AddNewItem
                 toggleButtonText="+ Add another task"

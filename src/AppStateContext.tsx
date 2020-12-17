@@ -28,6 +28,15 @@ type Action =
         type: 'SET_DRAGGED_ITEM',
         payload: DragItem | undefined
     }
+    | {
+        type: 'MOVE_TASK',
+        payload: {
+            dragIndex: number,
+            hoverIndex: number,
+            sourceColumn: string,
+            targetColumn: string
+        }
+    }
 
 interface Task {
     id: string,
@@ -105,6 +114,22 @@ const appStateReducer = (state: AppState, action: Action): AppState => {
 
             const { dragIndex, hoverIndex } = action.payload;
             state.lists = moveItem(state.lists, dragIndex, hoverIndex);
+
+            return {...state};
+        }
+        case 'MOVE_TASK': {
+            
+            const { dragIndex, hoverIndex, sourceColumn, targetColumn } = action.payload;
+            const sourceLaneIndex = findItemIndexById(
+                state.lists,
+                sourceColumn
+            );
+            const targetLaneIndex = findItemIndexById(
+                state.lists,
+                targetColumn
+            );
+            const item = state.lists[sourceLaneIndex].tasks.splice(dragIndex, 1)[0];
+            state.lists[targetLaneIndex].tasks.splice(hoverIndex, 0, item);
 
             return {...state};
         }
