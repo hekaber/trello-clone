@@ -1,8 +1,10 @@
-import React, { createContext, useReducer, useContext } from 'react';
+import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import {v4 as uuidv4} from 'uuid';
+import { save } from './api';
 import { DragItem } from './DragItem';
 import { moveItem } from './moveItem';
 import { findItemIndexById } from './utils/findItemIndexById';
+import { withData } from './withData';
 
 /*
     Define types using discriminated union technique
@@ -59,25 +61,26 @@ export interface AppState {
     draggedItem?: DragItem
 }
 
-const appData: AppState = {
-    lists: [
-        {
-            id: '0',
-            text: 'To Do',
-            tasks: [{ id: 'c0', text: 'Generate app scaffold' }]
-        },
-        {
-            id: '1',
-            text: 'In Progress',
-            tasks: [{ id: 'c2', text: 'Learn Typescript' }]
-        },
-        {
-            id: '2',
-            text: 'Done',
-            tasks: [{ id: 'c3', text: 'Begin to use static typing' }]
-        }
-    ]
-}
+// Old Data source before fetching it from backend
+// const appData: AppState = {
+//     lists: [
+//         {
+//             id: '0',
+//             text: 'To Do',
+//             tasks: [{ id: 'c0', text: 'Generate app scaffold' }]
+//         },
+//         {
+//             id: '1',
+//             text: 'In Progress',
+//             tasks: [{ id: 'c2', text: 'Learn Typescript' }]
+//         },
+//         {
+//             id: '2',
+//             text: 'Done',
+//             tasks: [{ id: 'c3', text: 'Begin to use static typing' }]
+//         }
+//     ]
+// }
 
 // create AppStateContext with app state context props {state: AppState, dispatch: React.Dispatch<Action>}
 const AppStateContext = createContext<AppStateContextProps>({} as AppStateContextProps);
@@ -149,17 +152,21 @@ const appStateReducer = (state: AppState, action: Action): AppState => {
 // AppStateProvider will pass the hardcoded appData through the AppStateContext.Provider
 // This component only accepts children as a prop, as we do not want to have any other props
 // we pass an empty object to it
-export const AppStateProvider = ({ children }: React.PropsWithChildren<{}>) => {
+export const AppStateProvider = withData(({ children, initialState }: React.PropsWithChildren<{initialState: AppState}>) => {
 
     // Takes appStateReducer defined above and appData defined @ l.53
-    const [state, dispatch] = useReducer(appStateReducer, appData);
+    const [state, dispatch] = useReducer(appStateReducer, initialState);
+
+    useEffect(() => {
+        save(state);
+    }, [state]);
 
     return (
         <AppStateContext.Provider value={{ state, dispatch }}>
             {children}
         </AppStateContext.Provider>
     );
-}
+});
 
 // custom hook who wraps useContext to retrieve the value from AppStateContext
 export const useAppState = () => {
