@@ -1,5 +1,6 @@
-import React, { createContext, useReducer, useContext } from 'react';
+import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import {v4 as uuidv4} from 'uuid';
+import { save } from './api';
 import { DragItem } from './DragItem';
 import { moveItem } from './moveItem';
 import { findItemIndexById } from './utils/findItemIndexById';
@@ -153,6 +154,10 @@ export const AppStateProvider = ({ children }: React.PropsWithChildren<{}>) => {
 
     // Takes appStateReducer defined above and appData defined @ l.53
     const [state, dispatch] = useReducer(appStateReducer, appData);
+
+    useEffect(() => {
+        save(state);
+    }, [state]);
 
     return (
         <AppStateContext.Provider value={{ state, dispatch }}>
