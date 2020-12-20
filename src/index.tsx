@@ -6,7 +6,6 @@ import { AppStateProvider } from './AppStateContext';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-console.log(process.env);
 ReactDOM.render(
   <DndProvider backend={HTML5Backend}>
     {/* AppStateProvider allows us to get state and dispatch from any component */}

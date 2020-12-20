@@ -39,6 +39,12 @@ type Action =
             targetColumn: string
         }
     }
+    | {
+        type: 'DELETE_LIST',
+        payload: {
+            id: string
+        }
+    }
 
 interface Task {
     id: string,
@@ -61,7 +67,7 @@ export interface AppState {
     draggedItem?: DragItem
 }
 
-// Old Data source before fetching it from backend
+// Old Data mockup before fetching it from backend
 // const appData: AppState = {
 //     lists: [
 //         {
@@ -135,6 +141,16 @@ const appStateReducer = (state: AppState, action: Action): AppState => {
             state.lists[targetLaneIndex].tasks.splice(hoverIndex, 0, item);
 
             return {...state};
+        }
+        case 'DELETE_LIST': {
+
+            const {id: columnId} = action.payload;
+            const targetColumnIndex = findItemIndexById(
+                state.lists,
+                columnId
+            );
+            state.lists.splice(targetColumnIndex, 1);
+            return {...state, lists: [...state.lists]};
         }
         case 'SET_DRAGGED_ITEM': {
 

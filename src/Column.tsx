@@ -4,9 +4,10 @@ import { AddNewItem } from './AddNewItem';
 import { useAppState } from './AppStateContext';
 import { Card } from './Card';
 import { DragItem } from './DragItem';
-import { ColumnContainer, ColumnTitle } from './styles';
+import { ColumnContainer, ColumnTitle, ColumnHeader } from './styles';
 import { useItemDrag } from './useItemDrag';
 import { isHidden } from './utils/isHidden';
+import { SideMenu } from './SideMenu';
 
 interface ColumnProps {
     isPreview?: boolean,
@@ -23,11 +24,11 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
             if (item.type === 'COLUMN') {
                 const dragIndex = item.index;
                 const hoverIndex = index;
-    
+
                 if (dragIndex === hoverIndex) {
                     return;
                 }
-    
+
                 dispatch({ type: 'MOVE_LIST', payload: { dragIndex, hoverIndex } });
                 item.index = hoverIndex;
             }
@@ -36,12 +37,12 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
                 const hoverIndex = 0;
                 const sourceColumn = item.columnId;
                 const targetColumn = id;
-    
+
                 if (sourceColumn === targetColumn) {
                     return;
                 }
-    
-                dispatch({ type: 'MOVE_TASK', payload:{ dragIndex, hoverIndex, sourceColumn, targetColumn }});
+
+                dispatch({ type: 'MOVE_TASK', payload: { dragIndex, hoverIndex, sourceColumn, targetColumn } });
                 item.index = hoverIndex;
                 item.columnId = targetColumn;
             }
@@ -60,7 +61,13 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
             ref={ref}
             isHidden={isHidden(isPreview, state.draggedItem, 'COLUMN', id)}
         >
-            <ColumnTitle>{text}</ColumnTitle>
+            <ColumnHeader>
+                <ColumnTitle>{text}</ColumnTitle>
+                <SideMenu
+                    columnId={id}
+                />
+            </ColumnHeader>
+
             { state.lists[index].tasks.map((task, i) => {
                 return <Card
                     key={task.id}
@@ -76,7 +83,6 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
                 dark
             />
         </ColumnContainer>
-
     );
 }
 
