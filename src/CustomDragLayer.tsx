@@ -1,7 +1,7 @@
 import { XYCoord, useDragLayer } from 'react-dnd';
 import { Column } from './Column';
 import { Card } from './Card';
-import { CustomDragLayerContainer } from './styles';
+import { WindowOverLayerContainer } from './styles';
 
 export const CustomDragLayer = () => {
 
@@ -12,7 +12,7 @@ export const CustomDragLayer = () => {
     }));
 
     return isDragging ? (
-        <CustomDragLayerContainer>
+        <WindowOverLayerContainer>
             <div style={getItemStyles(currentOffset)}>
                 {item.type === 'COLUMN' ? (
                     <Column
@@ -31,7 +31,7 @@ export const CustomDragLayer = () => {
                         />
                     )}
             </div>
-        </CustomDragLayerContainer>
+        </WindowOverLayerContainer>
     ) : null;
 }
 

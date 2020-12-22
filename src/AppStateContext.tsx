@@ -3,6 +3,7 @@ import {v4 as uuidv4} from 'uuid';
 import { save } from './api';
 import { DragItem } from './DragItem';
 import { moveItem } from './moveItem';
+import { PopoverItem } from './PopoverItem';
 import { findItemIndexById } from './utils/findItemIndexById';
 import { withData } from './withData';
 
@@ -29,6 +30,10 @@ type Action =
     | {
         type: 'SET_DRAGGED_ITEM',
         payload: DragItem | undefined
+    }
+    | {
+        type: 'SET_SHOWN_ITEM',
+        payload: PopoverItem | undefined
     }
     | {
         type: 'MOVE_TASK',
@@ -65,6 +70,7 @@ interface AppStateContextProps {
 export interface AppState {
     lists: List[]
     draggedItem?: DragItem
+    displayedItem?: PopoverItem
 }
 
 // Old Data mockup before fetching it from backend
@@ -157,6 +163,13 @@ const appStateReducer = (state: AppState, action: Action): AppState => {
             return { 
                 ...state, 
                 draggedItem: action.payload 
+            }
+        }
+        case 'SET_SHOWN_ITEM': {
+
+            return {
+                ...state,
+                displayedItem: action.payload
             }
         }
         default: {

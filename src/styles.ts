@@ -36,27 +36,23 @@ export const ColumnHeader = styled.div`
     justify-content: space-between;
 `
 
-interface SideMenuProps {
+interface MenuProps {
     isHidden?: boolean;
 }
 
-export const SideMenuContainer = styled.div<SideMenuProps>`
+export const MenuContainer = styled.div<MenuProps>`
     position: absolute;
     width: 200px;
     top: 0;
     background-color: #EBECF0;
     border-radius: 3px;
     border: thin solid #000000;
-    right: ${props => (props.isHidden ? '-200px' : '0' )};
-    transition: all 200ms linear;
-    opacity: ${props => (props.isHidden ? 0 : 1 )};
-    z-index: ${props => (props.isHidden ? '-1' : '100' )};
+    z-index: 200;
 `
 
-export const SideMenuItem = styled.div<SideMenuProps>`
+export const MenuItem = styled.div<MenuProps>`
     padding: 0.2rem;
     border-bottom: thin solid #000000;
-    opacity: ${props => (props.isHidden ? 0 : 1 )};
     cursor: pointer;
     &:hover {
         opacity: 0.7;
@@ -79,15 +75,20 @@ export const CardContainer = styled(DragPreviewContainer)`
     box-shadow: #091E4240 0 1px 0 0; 
 `
 
-export const ShowMenuButton = styled.button`
+export const MenuButton = styled.a`
     cursor: pointer;
-    font-size: 0.5rem;
     color: #000000;
-    padding: 0.5em;
     border-radius: 3px;
-    border: thin solid #000000;
-    width: 17px;
-    height: 19px;
+    padding: 0.2rem;
+    width: 25px;
+    height: 25px;
+    &:hover {
+        background-color: rgba(9,30,66,.08);
+    }
+    & > svg {
+        width: 100%;
+        height: 100%;
+    }
 `
 
 interface AddItemButtonProps {
@@ -109,6 +110,7 @@ export const AddItemButton = styled.button<AddItemButtonProps>`
         background-color: #FFFFFF52;
     }
 `
+
 export const NewItemFormContainer = styled.div`
     max-width: 300px;
     display: flex;
@@ -134,12 +136,12 @@ export const NewItemInput = styled.input`
     padding: 0.5rem 1rem;
     width: 100%;
 `
-export const CustomDragLayerContainer = styled.div`
+export const WindowOverLayerContainer = styled.div`
+    width: 100%;
     height: 100%;
     left: 0;
     pointer-events: none;
     position: fixed;
     top: 0;
-    width: 100%;
     z-index: 100;
 `

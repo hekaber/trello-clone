@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SideMenuContainer, ShowMenuButton, SideMenuItem } from "./styles";
+import { MenuContainer, MenuButton, MenuItem } from "./styles";
 import { IoMenuOutline, IoArrowForward } from 'react-icons/io5';
 import { useAppState } from "./AppStateContext";
 
@@ -12,29 +12,29 @@ export const SideMenu = (props: SideMenuProps) => {
     const [showMenu, setShowMenu] = useState(false);
     const { columnId } = props;
     const { dispatch } = useAppState();
-
+    
     return (
         <React.Fragment>
-            <ShowMenuButton
+            <MenuButton
                 onClick={() => { setShowMenu(true) }}
             >
                 <IoMenuOutline />
-            </ShowMenuButton>
-            <SideMenuContainer
+            </MenuButton>
+            <MenuContainer
                 isHidden={!showMenu}
             >
-                <SideMenuItem
+                <MenuItem
                     onClick={() => {dispatch({type: 'DELETE_LIST', payload: { id: columnId}})}}
                 >
                     Delete List
-                    </SideMenuItem>
-                <SideMenuItem>Delete Task</SideMenuItem>
-                <ShowMenuButton
+                    </MenuItem>
+                <MenuItem>Delete Task</MenuItem>
+                <MenuButton
                     onClick={() => setShowMenu(false)}
                 >
                     <IoArrowForward />
-                </ShowMenuButton>
-            </SideMenuContainer>
+                </MenuButton>
+            </MenuContainer>
         </React.Fragment>
     );
 }
