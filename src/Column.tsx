@@ -7,6 +7,7 @@ import { DragItem } from './DragItem';
 import { ColumnContainer, ColumnTitle, ColumnHeader, MenuButton } from './styles';
 import { IoMenuOutline } from 'react-icons/io5';
 import { useItemDrag } from './useItemDrag';
+import { useOutsideClick } from './utils/useOutsideClick';
 import { isHidden } from './utils/isHidden';
 
 interface ColumnProps {
@@ -56,7 +57,7 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        
+        console.log(`render ${id}`);
         currentPos = ref?.current?.getBoundingClientRect();
         dispatch({
             type:'SET_SHOWN_ITEM', 
@@ -68,7 +69,7 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
         });
     }, [showMenu]);
     
-    
+    useOutsideClick(ref, () => { setShowMenu(false) });
 
     const { drag } = useItemDrag({ type: 'COLUMN', id, index, text });
 

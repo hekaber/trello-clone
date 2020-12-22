@@ -1,14 +1,13 @@
-import { MenuContainer } from './styles';
+import { MenuContainer, MenuItem } from './styles';
 
 export const MenuColumn = (props: any) => {
 
+    
     return(
         <MenuContainer>
-            <ul>
-                <li>Option 1</li>
-                <li>Option 2</li>
-                <li>Option 3</li>
-            </ul>
+            <MenuItem>Option 1</MenuItem>
+            <MenuItem>Option 2</MenuItem>
+            <MenuItem>Option 3</MenuItem>
         </MenuContainer>
     );
 }
