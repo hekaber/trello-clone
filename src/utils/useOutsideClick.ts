@@ -20,5 +20,5 @@ export const useOutsideClick = (ref: RefObject<HTMLElement>, handler: Function) 
             document.removeEventListener('mousedown', handleClickOut);
             document.removeEventListener('touchstart', handleClickOut);
         }
-    }, [ref, handler]);
+    });
 }

@@ -1,6 +1,6 @@
 type BasePopoverItem = {
     isShown: boolean
-    position: DOMRect | undefined
+    position?: DOMRect | undefined
 }
 
 export type MenuColumnPopoverItem = BasePopoverItem & {
@@ -11,4 +11,4 @@ export type MenuTaskPopoverItem = BasePopoverItem & {
     type: 'MENU_TASK'
 }
 
-export type PopoverItem = MenuColumnPopoverItem;
+export type PopoverItem = MenuColumnPopoverItem | MenuTaskPopoverItem;

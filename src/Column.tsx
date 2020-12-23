@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
+import { useOutsideClick } from './utils/useOutsideClick';
+import { useAppState } from './AppStateContext';
 import { useDrop } from 'react-dnd';
 import { AddNewItem } from './AddNewItem';
-import { useAppState } from './AppStateContext';
 import { Card } from './Card';
 import { DragItem } from './DragItem';
 import { ColumnContainer, ColumnTitle, ColumnHeader, MenuButton } from './styles';
 import { IoMenuOutline } from 'react-icons/io5';
 import { useItemDrag } from './useItemDrag';
-import { useOutsideClick } from './utils/useOutsideClick';
 import { isHidden } from './utils/isHidden';
 
 interface ColumnProps {
@@ -52,24 +52,18 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
     });
 
     const { state, dispatch } = useAppState();
-    const [showMenu, setShowMenu] = useState(false);
-    let currentPos: DOMRect | undefined = undefined;
     const ref = useRef<HTMLDivElement>(null);
+    const showMenu = state.displayedItem ? state.displayedItem.isShown : false;
 
-    useEffect(() => {
-        console.log(`render ${id}`);
-        currentPos = ref?.current?.getBoundingClientRect();
+    useOutsideClick(ref, () => {
         dispatch({
-            type:'SET_SHOWN_ITEM', 
+            type: 'SET_SHOWN_ITEM',
             payload: {
-                type:'MENU_COLUMN', 
-                isShown:showMenu,
-                position: currentPos
+                type: 'MENU_COLUMN',
+                isShown: false
             }
         });
-    }, [showMenu]);
-    
-    useOutsideClick(ref, () => { setShowMenu(false) });
+    });
 
     const { drag } = useItemDrag({ type: 'COLUMN', id, index, text });
 
@@ -84,7 +78,16 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
             <ColumnHeader>
                 <ColumnTitle>{text}</ColumnTitle>
                 <MenuButton
-                    onClick={() => {setShowMenu(!showMenu);}}
+                    onClick={() => {
+                        dispatch({
+                            type: 'SET_SHOWN_ITEM',
+                            payload: {
+                                type: 'MENU_COLUMN',
+                                isShown: !showMenu,
+                                position: ref?.current?.getBoundingClientRect()
+                            }
+                        });
+                    }}
                 >
                     <IoMenuOutline />
                 </MenuButton>
