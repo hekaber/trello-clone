@@ -1,10 +1,12 @@
 import React, { useRef } from 'react';
+import { handleOutsideClick } from './utils/handleOutsideClick';
+import { useDataState, useAppState } from './AppStateContext';
 import { useDrop } from 'react-dnd';
 import { AddNewItem } from './AddNewItem';
-import { useAppState } from './AppStateContext';
 import { Card } from './Card';
 import { DragItem } from './DragItem';
-import { ColumnContainer, ColumnTitle } from './styles';
+import { ColumnContainer, ColumnTitle, ColumnHeader, MenuButton } from './styles';
+import { IoMenuOutline } from 'react-icons/io5';
 import { useItemDrag } from './useItemDrag';
 import { isHidden } from './utils/isHidden';
 
@@ -23,11 +25,11 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
             if (item.type === 'COLUMN') {
                 const dragIndex = item.index;
                 const hoverIndex = index;
-    
+
                 if (dragIndex === hoverIndex) {
                     return;
                 }
-    
+
                 dispatch({ type: 'MOVE_LIST', payload: { dragIndex, hoverIndex } });
                 item.index = hoverIndex;
             }
@@ -36,20 +38,50 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
                 const hoverIndex = 0;
                 const sourceColumn = item.columnId;
                 const targetColumn = id;
-    
+
                 if (sourceColumn === targetColumn) {
                     return;
                 }
-    
-                dispatch({ type: 'MOVE_TASK', payload:{ dragIndex, hoverIndex, sourceColumn, targetColumn }});
+
+                dispatch({ type: 'MOVE_TASK', payload: { dragIndex, hoverIndex, sourceColumn, targetColumn } });
                 item.index = hoverIndex;
                 item.columnId = targetColumn;
             }
 
         }
     });
-    const { state, dispatch } = useAppState();
+
+    const { state, dispatch } = useDataState();
+    const { appState, dispatchAppState } = useAppState();
     const ref = useRef<HTMLDivElement>(null);
+    const showMenu = appState.displayedItem ? appState.displayedItem.isShown : false;
+
+    const handleClick = () => {
+        dispatchAppState({
+            type: 'SET_SHOWN_ITEM',
+            payload: {
+                type: 'MENU_COLUMN',
+                isShown: !showMenu,
+                position: ref?.current?.getBoundingClientRect()
+            }
+        });
+        handleOutsideClick(
+            ref,
+            id,
+            !showMenu,
+            () => {
+                dispatchAppState({
+                    type: 'SET_SHOWN_ITEM',
+                    payload: {
+                        type: 'MENU_COLUMN',
+                        isShown: false,
+                    }
+                })
+            }
+        )
+    }
+
+
     const { drag } = useItemDrag({ type: 'COLUMN', id, index, text });
 
     drag(drop(ref));
@@ -58,9 +90,18 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
         <ColumnContainer
             isPreview={isPreview}
             ref={ref}
-            isHidden={isHidden(isPreview, state.draggedItem, 'COLUMN', id)}
+            isHidden={isHidden(isPreview, appState.draggedItem, 'COLUMN', id)}
         >
-            <ColumnTitle>{text}</ColumnTitle>
+            <ColumnHeader>
+                <ColumnTitle>{text}</ColumnTitle>
+                <MenuButton
+                    onClick={handleClick}
+                >
+                    <IoMenuOutline />
+                </MenuButton>
+
+            </ColumnHeader>
+
             { state.lists[index].tasks.map((task, i) => {
                 return <Card
                     key={task.id}
@@ -76,7 +117,6 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
                 dark
             />
         </ColumnContainer>
-
     );
 }
 

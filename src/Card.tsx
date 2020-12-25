@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useDrop } from 'react-dnd';
-import { useAppState } from './AppStateContext';
+import { useDataState, useAppState } from './AppStateContext';
 import { CardDragItem } from './DragItem';
 import { CardContainer } from './styles';
 import { useItemDrag } from './useItemDrag';
@@ -17,7 +17,8 @@ interface CardProps {
 
 export const Card = ({ id, text, columnId, index, isPreview }: CardProps) => {
 
-    const { state, dispatch } = useAppState();
+    const { dispatch } = useDataState();
+    const { appState } = useAppState();
     const ref = useRef<HTMLDivElement>(null);
     const { drag } = useItemDrag({ type: 'CARD', id, index, text, columnId });
 
@@ -45,7 +46,7 @@ export const Card = ({ id, text, columnId, index, isPreview }: CardProps) => {
     return <CardContainer
         ref={ref}
         isPreview={isPreview}
-        isHidden={isHidden(isPreview, state.draggedItem, 'CARD', id)}
+        isHidden={isHidden(isPreview, appState.draggedItem, 'CARD', id)}
     >
         {text}
     </CardContainer>

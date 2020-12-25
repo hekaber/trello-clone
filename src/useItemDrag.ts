@@ -6,16 +6,16 @@ import { DragItem } from './DragItem';
 
 export const useItemDrag = (item: DragItem) => {
 
-    const { dispatch } = useAppState();
+    const { dispatchAppState } = useAppState();
     //The preview function accepts an elelment or node to use as a drag preview
     const [, drag, preview] = useDrag({
         item,
         begin: () =>
-            dispatch({
+            dispatchAppState({
                 type: 'SET_DRAGGED_ITEM',
                 payload: item
             }),
-        end: () => dispatch({ type: 'SET_DRAGGED_ITEM', payload: undefined})
+        end: () => dispatchAppState({ type: 'SET_DRAGGED_ITEM', payload: undefined})
 
     });
 

@@ -1,19 +1,18 @@
 import React, { PropsWithChildren, ComponentType, useState, useEffect } from 'react';
 import { load } from './api';
-import { AppState } from './AppStateContext';
+import { DataState } from './AppStateContext';
 
 // HOC pattern
 export const withData = (
-    WrappedComponent: ComponentType<PropsWithChildren<{ initialState: AppState }>>
+    WrappedComponent: ComponentType<PropsWithChildren<{ initialState: DataState }>>
 ) => {
 
     return ({ children }: PropsWithChildren<{}>) => {
 
         const [isLoading, setIsLoading] = useState(true);
         const [error, setError] = useState<Error | undefined>();
-        const [initialState, setInitialState] = useState<AppState>({
-            lists: [],
-            draggedItem: undefined
+        const [initialState, setInitialState] = useState<DataState>({
+            lists: []
         });
 
         useEffect(() => {
