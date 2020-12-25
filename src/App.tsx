@@ -2,13 +2,13 @@ import React from 'react';
 import { AppContainer } from './styles';
 import { Column } from './Column';
 import { AddNewItem } from './AddNewItem';
-import { useAppState } from './AppStateContext';
+import { useDataState } from './AppStateContext';
 import { CustomDragLayer } from './CustomDragLayer';
 import { PopoverLayer } from './PopoverLayer';
 
 const App = () => {
 
-  const { state, dispatch } = useAppState();
+  const { state, dispatch } = useDataState();
 
   return (
     <AppContainer>

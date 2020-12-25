@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { MenuContainer, MenuButton, MenuItem } from "./styles";
 import { IoMenuOutline, IoArrowForward } from 'react-icons/io5';
-import { useAppState } from "./AppStateContext";
+import { useDataState } from "./AppStateContext";
 
 interface SideMenuProps {
     columnId: string
@@ -11,7 +11,7 @@ export const SideMenu = (props: SideMenuProps) => {
 
     const [showMenu, setShowMenu] = useState(false);
     const { columnId } = props;
-    const { dispatch } = useAppState();
+    const { dispatch } = useDataState();
     
     return (
         <React.Fragment>

@@ -1,6 +1,6 @@
-import { AppState } from './AppStateContext';
+import { DataState } from './AppStateContext';
 
-export const save = (payload: AppState) => {
+export const save = (payload: DataState) => {
 
     return fetch(`${process.env.REACT_APP_BACKEND_ENDPOINT}/save`, {
         method: 'POST',
@@ -19,6 +19,6 @@ export const load = () => {
 
     return fetch(`${process.env.REACT_APP_BACKEND_ENDPOINT}/load`)
     .then((response) => {
-        return response.json() as Promise<AppState>
+        return response.json() as Promise<DataState>
     });
 }

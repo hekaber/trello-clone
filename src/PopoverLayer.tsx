@@ -4,8 +4,8 @@ import { useAppState } from './AppStateContext';
 
 export const PopoverLayer = () => {
 
-    const { state } = useAppState();
-    const { displayedItem } = state; 
+    const { appState } = useAppState();
+    const { displayedItem } = appState; 
 
 
     return displayedItem?.isShown ? (

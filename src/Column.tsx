@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from 'react';
-import { useOutsideClick } from './utils/useOutsideClick';
-import { useAppState } from './AppStateContext';
+import React, { useRef } from 'react';
+import { handleOutsideClick } from './utils/handleOutsideClick';
+import { useDataState, useAppState } from './AppStateContext';
 import { useDrop } from 'react-dnd';
 import { AddNewItem } from './AddNewItem';
 import { Card } from './Card';
@@ -51,19 +51,36 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
         }
     });
 
-    const { state, dispatch } = useAppState();
+    const { state, dispatch } = useDataState();
+    const { appState, dispatchAppState } = useAppState();
     const ref = useRef<HTMLDivElement>(null);
-    const showMenu = state.displayedItem ? state.displayedItem.isShown : false;
+    const showMenu = appState.displayedItem ? appState.displayedItem.isShown : false;
 
-    useOutsideClick(ref, () => {
-        dispatch({
+    const handleClick = () => {
+        dispatchAppState({
             type: 'SET_SHOWN_ITEM',
             payload: {
                 type: 'MENU_COLUMN',
-                isShown: false
+                isShown: !showMenu,
+                position: ref?.current?.getBoundingClientRect()
             }
         });
-    });
+        handleOutsideClick(
+            ref,
+            id,
+            !showMenu,
+            () => {
+                dispatchAppState({
+                    type: 'SET_SHOWN_ITEM',
+                    payload: {
+                        type: 'MENU_COLUMN',
+                        isShown: false,
+                    }
+                })
+            }
+        )
+    }
+
 
     const { drag } = useItemDrag({ type: 'COLUMN', id, index, text });
 
@@ -73,21 +90,12 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
         <ColumnContainer
             isPreview={isPreview}
             ref={ref}
-            isHidden={isHidden(isPreview, state.draggedItem, 'COLUMN', id)}
+            isHidden={isHidden(isPreview, appState.draggedItem, 'COLUMN', id)}
         >
             <ColumnHeader>
                 <ColumnTitle>{text}</ColumnTitle>
                 <MenuButton
-                    onClick={() => {
-                        dispatch({
-                            type: 'SET_SHOWN_ITEM',
-                            payload: {
-                                type: 'MENU_COLUMN',
-                                isShown: !showMenu,
-                                position: ref?.current?.getBoundingClientRect()
-                            }
-                        });
-                    }}
+                    onClick={handleClick}
                 >
                     <IoMenuOutline />
                 </MenuButton>
