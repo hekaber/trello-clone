@@ -36,23 +36,30 @@ export const ColumnHeader = styled.div`
     justify-content: space-between;
 `
 
+export const MenuHeader = styled.div`
+    height: 40px;
+`;
+
 interface MenuProps {
     isHidden?: boolean;
 }
 
 export const MenuContainer = styled.div<MenuProps>`
     position: absolute;
-    width: 200px;
+    width: 300px;
     top: 0;
     background-color: #EBECF0;
     border-radius: 3px;
     border: thin solid #000000;
     z-index: 200;
+    padding: 0.5rem;
+    box-shadow: #091E4240 0 2px 10px 2px; 
 `
 
 export const MenuItem = styled.div<MenuProps>`
+    height: 40px;
+    line-height: 40px;
     padding: 0.2rem;
-    border-bottom: thin solid #000000;
     cursor: pointer;
     &:hover {
         opacity: 0.7;
@@ -76,12 +83,15 @@ export const CardContainer = styled(DragPreviewContainer)`
 `
 
 export const MenuButton = styled.a`
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
     color: #000000;
     border-radius: 3px;
-    padding: 0.2rem;
-    width: 25px;
-    height: 25px;
+    padding: 0.5rem;
     &:hover {
         background-color: rgba(9,30,66,.08);
     }
