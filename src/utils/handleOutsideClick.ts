@@ -1,6 +1,6 @@
 import { RefObject } from "react"
 
-export const handleOutsideClick = (ref: RefObject<HTMLElement>, id: string, showMenu: boolean, handler: Function) => {
+export const handleOutsideClick = (ref: RefObject<HTMLElement>, showMenu: boolean, handler: Function) => {
 
     function handleClickOut(event: MouseEvent | TouchEvent) {
         if (!ref.current || ref.current.contains(event.target as Node)) {

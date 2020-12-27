@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 html {
     box-sizing: border-box;
 }
@@ -6,6 +8,10 @@ html {
 *::before,
 *::after {
     box-sizing: inherit;
+}
+
+body, button {
+    font-family: 'Roboto', sans-serif;
 }
 
 html,

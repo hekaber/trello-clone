@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { handleOutsideClick } from './utils/handleOutsideClick';
 import { useDataState, useAppState } from './AppStateContext';
 import { useDrop } from 'react-dnd';
 import { AddNewItem } from './AddNewItem';
@@ -65,20 +64,6 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
                 position: ref?.current?.getBoundingClientRect()
             }
         });
-        handleOutsideClick(
-            ref,
-            id,
-            !showMenu,
-            () => {
-                dispatchAppState({
-                    type: 'SET_SHOWN_ITEM',
-                    payload: {
-                        type: 'MENU_COLUMN',
-                        isShown: false,
-                    }
-                })
-            }
-        )
     }
 
 

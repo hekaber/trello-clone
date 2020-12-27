@@ -1,18 +1,35 @@
 import { WindowOverLayerContainer } from './styles';
+import { useRef } from 'react';
 import { MenuColumn } from './MenuColumn';
 import { useAppState } from './AppStateContext'; 
+import { handleOutsideClick } from './utils/handleOutsideClick';
 
 export const PopoverLayer = () => {
 
-    const { appState } = useAppState();
+    const { appState, dispatchAppState } = useAppState();
+    const showMenu = appState.displayedItem ? appState.displayedItem.isShown : false;
     const { displayedItem } = appState; 
+    const ref = useRef<HTMLDivElement>(null);
 
+    handleOutsideClick(
+        ref,
+        !showMenu,
+        () => {
+            dispatchAppState({
+                type: 'SET_SHOWN_ITEM',
+                payload: {
+                    type: 'MENU_COLUMN',
+                    isShown: false,
+                }
+            })
+        }
+    )
 
     return displayedItem?.isShown ? (
         <WindowOverLayerContainer>
             <div style={getItemStyles(displayedItem?.position)} >
                 <MenuColumn 
-                
+                    ref={ref}
                 />
             </div>
         </WindowOverLayerContainer>
@@ -21,8 +38,8 @@ export const PopoverLayer = () => {
 
 const getItemStyles = (currRect: DOMRect | undefined ): React.CSSProperties => {
 
-    const style = { position: 'absolute' } as React.CSSProperties;
-    if ( typeof currRect === undefined) {
+    const style = { position: 'absolute', pointerEvents: 'initial' } as React.CSSProperties;
+    if (!currRect) {
         return {
             ...style,
             top: '0',
@@ -30,10 +47,9 @@ const getItemStyles = (currRect: DOMRect | undefined ): React.CSSProperties => {
         };
     }
 
-    const leftPos = currRect ? currRect.x + currRect.width : 0; 
     return {
         ...style,
-        top: `${currRect?.y}px`,
-        left: `${leftPos}px`
+        top: `${currRect.y + 40}px`,
+        left: `${currRect.x + currRect.width - 40}px`
     }
 }
