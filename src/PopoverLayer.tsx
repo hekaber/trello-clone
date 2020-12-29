@@ -2,38 +2,44 @@ import { WindowOverLayerContainer } from './styles';
 import { useRef } from 'react';
 import { MenuColumn } from './MenuColumn';
 import { useAppState } from './AppStateContext'; 
-import { handleOutsideClick } from './utils/handleOutsideClick';
+// import { handleOutsideClick } from './utils/handleOutsideClick';
 
 export const PopoverLayer = () => {
 
     const { appState, dispatchAppState } = useAppState();
-    const showMenu = appState.displayedItem ? appState.displayedItem.isShown : false;
+
     const { displayedItem } = appState; 
     const ref = useRef<HTMLDivElement>(null);
 
-    handleOutsideClick(
-        ref,
-        !showMenu,
-        () => {
-            dispatchAppState({
-                type: 'SET_SHOWN_ITEM',
-                payload: {
-                    type: 'MENU_COLUMN',
-                    isShown: false,
-                }
-            })
-        }
-    )
+    if (displayedItem) {
 
-    return displayedItem?.isShown ? (
-        <WindowOverLayerContainer>
-            <div style={getItemStyles(displayedItem?.position)} >
-                <MenuColumn 
-                    ref={ref}
-                />
-            </div>
-        </WindowOverLayerContainer>
-    ) : null;
+        return displayedItem.isShown ? (
+            <WindowOverLayerContainer>
+                <div style={getItemStyles(displayedItem.position)} >
+                    <MenuColumn 
+                        ref={ref}
+                        targetId={displayedItem.targetId}
+                    />
+                </div>
+            </WindowOverLayerContainer>
+        ) : null;
+    }
+
+    return null;
+    // handleOutsideClick(
+    //     ref,
+    //     !showMenu,
+    //     () => {
+    //         dispatchAppState({
+    //             type: 'SET_SHOWN_ITEM',
+    //             payload: {
+    //                 type: 'MENU_COLUMN',
+    //                 isShown: false,
+    //             }
+    //         })
+    //     }
+    // )
+
 }
 
 const getItemStyles = (currRect: DOMRect | undefined ): React.CSSProperties => {
