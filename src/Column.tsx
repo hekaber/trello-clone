@@ -61,7 +61,8 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
             payload: {
                 type: 'MENU_COLUMN',
                 isShown: !showMenu,
-                position: ref?.current?.getBoundingClientRect()
+                position: ref?.current?.getBoundingClientRect(),
+                targetId: id
             }
         });
     }
