@@ -1,7 +1,10 @@
+type ClickSource = 'OUT' | 'BUTTON';
+
 type BasePopoverItem = {
     isShown: boolean;
+    clickSource: ClickSource; 
     position?: DOMRect | undefined;
-    targetId: string;
+    targetId?: string;
 }
 
 export type MenuColumnPopoverItem = BasePopoverItem & {

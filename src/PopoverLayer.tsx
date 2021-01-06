@@ -1,15 +1,11 @@
 import { WindowOverLayerContainer } from './styles';
-import { useRef } from 'react';
 import { MenuColumn } from './MenuColumn';
 import { useAppState } from './AppStateContext'; 
-// import { handleOutsideClick } from './utils/handleOutsideClick';
 
 export const PopoverLayer = () => {
 
-    const { appState, dispatchAppState } = useAppState();
-
+    const { appState } = useAppState();
     const { displayedItem } = appState; 
-    const ref = useRef<HTMLDivElement>(null);
 
     if (displayedItem) {
 
@@ -17,7 +13,6 @@ export const PopoverLayer = () => {
             <WindowOverLayerContainer>
                 <div style={getItemStyles(displayedItem.position)} >
                     <MenuColumn 
-                        ref={ref}
                         targetId={displayedItem.targetId}
                     />
                 </div>
@@ -26,20 +21,6 @@ export const PopoverLayer = () => {
     }
 
     return null;
-    // handleOutsideClick(
-    //     ref,
-    //     !showMenu,
-    //     () => {
-    //         dispatchAppState({
-    //             type: 'SET_SHOWN_ITEM',
-    //             payload: {
-    //                 type: 'MENU_COLUMN',
-    //                 isShown: false,
-    //             }
-    //         })
-    //     }
-    // )
-
 }
 
 const getItemStyles = (currRect: DOMRect | undefined ): React.CSSProperties => {

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import { useDataState, useAppState } from './AppStateContext';
 import { useDrop } from 'react-dnd';
 import { AddNewItem } from './AddNewItem';
@@ -8,6 +8,7 @@ import { ColumnContainer, ColumnTitle, ColumnHeader, MenuButton } from './styles
 import { IoMenuOutline } from 'react-icons/io5';
 import { useItemDrag } from './useItemDrag';
 import { isHidden } from './utils/isHidden';
+import { PopoverLayer } from './PopoverLayer';
 
 interface ColumnProps {
     isPreview?: boolean,
@@ -52,14 +53,18 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
 
     const { state, dispatch } = useDataState();
     const { appState, dispatchAppState } = useAppState();
-    const ref = useRef<HTMLDivElement>(null);
-    const showMenu = appState.displayedItem ? appState.displayedItem.isShown : false;
 
-    const handleClick = () => {
+    const ref = useRef<HTMLDivElement>(null);
+
+    const displayMenuBlock = () => {
+
+        const showMenu = appState.displayedItem ? appState.displayedItem.isShown : false;
+
         dispatchAppState({
             type: 'SET_SHOWN_ITEM',
             payload: {
                 type: 'MENU_COLUMN',
+                clickSource: 'BUTTON',
                 isShown: !showMenu,
                 position: ref?.current?.getBoundingClientRect(),
                 targetId: id
@@ -67,42 +72,46 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
         });
     }
 
-
     const { drag } = useItemDrag({ type: 'COLUMN', id, index, text });
 
     drag(drop(ref));
 
     return (
-        <ColumnContainer
-            isPreview={isPreview}
-            ref={ref}
-            isHidden={isHidden(isPreview, appState.draggedItem, 'COLUMN', id)}
-        >
-            <ColumnHeader>
-                <ColumnTitle>{text}</ColumnTitle>
-                <MenuButton
-                    onClick={handleClick}
-                >
-                    <IoMenuOutline />
-                </MenuButton>
+        <Fragment>
+            <PopoverLayer />
+            <ColumnContainer
+                isPreview={isPreview}
+                ref={ref}
+                isHidden={isHidden(isPreview, appState.draggedItem, 'COLUMN', id)}
+            >
+                <ColumnHeader>
+                    <ColumnTitle>{text}</ColumnTitle>
+                    <MenuButton
+                        onClick={displayMenuBlock}
+                    >
+                        <IoMenuOutline />
+                    </MenuButton>
 
-            </ColumnHeader>
+                </ColumnHeader>
 
-            { state.lists[index].tasks.map((task, i) => {
-                return <Card
-                    key={task.id}
-                    id={task.id}
-                    columnId={id}
-                    text={task.text}
-                    index={i}
+                {state.lists[index].tasks.map((task, i) => {
+                    return <Card
+                        key={task.id}
+                        id={task.id}
+                        columnId={id}
+                        text={task.text}
+                        index={i}
+                    />
+                })}
+                <AddNewItem
+                    toggleButtonText="+ Add another task"
+                    onAdd={text => dispatch({ type: 'ADD_TASK', payload: { text, columnId: id } })}
+                    dark
                 />
-            })}
-            <AddNewItem
-                toggleButtonText="+ Add another task"
-                onAdd={text => dispatch({ type: 'ADD_TASK', payload: { text, columnId: id } })}
-                dark
-            />
-        </ColumnContainer>
+            </ColumnContainer>
+
+        </Fragment>
+
     );
 }
 

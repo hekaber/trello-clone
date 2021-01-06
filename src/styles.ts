@@ -81,7 +81,6 @@ export const CardContainer = styled(DragPreviewContainer)`
     border-radius: 3px;
     box-shadow: #091E4240 0 1px 0 0; 
 `
-
 export const MenuButton = styled.a`
     position: absolute;
     top: 3px;
