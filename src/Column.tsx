@@ -51,26 +51,15 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
         }
     });
 
+    const [ menuState, setMenuState ] = useState(false); 
+    const handleHide = () => {
+        setMenuState(false);
+    }
+
     const { state, dispatch } = useDataState();
-    const { appState, dispatchAppState } = useAppState();
+    const { appState } = useAppState();
 
     const ref = useRef<HTMLDivElement>(null);
-
-    const displayMenuBlock = () => {
-
-        const showMenu = appState.displayedItem ? appState.displayedItem.isShown : false;
-
-        dispatchAppState({
-            type: 'SET_SHOWN_ITEM',
-            payload: {
-                type: 'MENU_COLUMN',
-                clickSource: 'BUTTON',
-                isShown: !showMenu,
-                position: ref?.current?.getBoundingClientRect(),
-                targetId: id
-            }
-        });
-    }
 
     const { drag } = useItemDrag({ type: 'COLUMN', id, index, text });
 
@@ -78,7 +67,12 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
 
     return (
         <Fragment>
-            <PopoverLayer />
+            <PopoverLayer
+                show={menuState}
+                position={ref?.current?.getBoundingClientRect()}
+                onHide={handleHide}
+                targetId={id}
+            />
             <ColumnContainer
                 isPreview={isPreview}
                 ref={ref}
@@ -87,7 +81,7 @@ export const Column = ({ isPreview, text, index, id }: ColumnProps) => {
                 <ColumnHeader>
                     <ColumnTitle>{text}</ColumnTitle>
                     <MenuButton
-                        onClick={displayMenuBlock}
+                        onClick={() => {setMenuState(!menuState)}}
                     >
                         <IoMenuOutline />
                     </MenuButton>

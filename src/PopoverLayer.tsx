@@ -1,29 +1,29 @@
+import { useState } from 'react';
 import { WindowOverLayerContainer } from './styles';
 import { MenuColumn } from './MenuColumn';
-import { useAppState } from './AppStateContext'; 
 
-export const PopoverLayer = () => {
-
-    const { appState } = useAppState();
-    const { displayedItem } = appState; 
-
-    if (displayedItem) {
-
-        return displayedItem.isShown ? (
-            <WindowOverLayerContainer>
-                <div style={getItemStyles(displayedItem.position)} >
-                    <MenuColumn 
-                        targetId={displayedItem.targetId}
-                    />
-                </div>
-            </WindowOverLayerContainer>
-        ) : null;
-    }
-
-    return null;
+interface PopoverLayerProps {
+    show: boolean;
+    targetId: string;
+    onHide: Function;
+    position?: DOMRect | undefined;
 }
 
-const getItemStyles = (currRect: DOMRect | undefined ): React.CSSProperties => {
+export const PopoverLayer = ({ show, targetId, position, onHide }: PopoverLayerProps) => {
+
+    return show ? (
+        <WindowOverLayerContainer>
+            <div style={getItemStyles(position)} >
+                <MenuColumn
+                    targetId={targetId}
+                    onHide={onHide}
+                />
+            </div>
+        </WindowOverLayerContainer>
+    ) : null;
+}
+
+const getItemStyles = (currRect: DOMRect | undefined): React.CSSProperties => {
 
     const style = { position: 'absolute', pointerEvents: 'initial' } as React.CSSProperties;
     if (!currRect) {

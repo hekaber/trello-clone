@@ -4,27 +4,20 @@ import { useDataState, useAppState } from './AppStateContext';
 import { useOutsideClick } from './utils/useOutsideClick';
 import { useRef } from 'react';
 
+interface MenuColumnProps {
+    targetId: string;
+    onHide: Function;
+}
 
-export const MenuColumn = (props: any) => {
+export const MenuColumn = ({ targetId, onHide }: MenuColumnProps) => {
 
     const { dispatch } = useDataState();
-    const { appState, dispatchAppState } = useAppState();
     const ref = useRef<HTMLDivElement>(null);
 
     useOutsideClick(
         ref,
         () => {
-            
-            dispatchAppState(
-            {
-                type: 'SET_SHOWN_ITEM',
-                payload: {
-                    type: 'MENU_COLUMN',
-                    clickSource: 'OUT',
-                    isShown: false
-                }
-            }
-        );
+            onHide();
     }
     );
 
@@ -39,16 +32,7 @@ export const MenuColumn = (props: any) => {
 
                 }}>Actions</div>
                 <MenuButton
-                    onClick={() => {dispatchAppState(
-                        {
-                            type: 'SET_SHOWN_ITEM',
-                            payload: {
-                                type: 'MENU_COLUMN',
-                                clickSource: 'BUTTON',
-                                isShown: false
-                            }
-                        }
-                    );}}
+                    onClick={() => {console.log('clouze')}}
                 >
                     <IoCloseOutline />
                 </MenuButton>
@@ -57,7 +41,7 @@ export const MenuColumn = (props: any) => {
                 onClick={() => {
                     dispatch({
                         type: 'DELETE_LIST',
-                        payload: { id: props.targetId }
+                        payload: { id: targetId }
                     })
                 }}
             >Delete</MenuItem>
